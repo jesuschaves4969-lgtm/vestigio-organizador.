@@ -1,5 +1,3 @@
-YAML
-
 name: Build Vestigio APK
 
 on:

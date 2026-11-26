@@ -1,4 +1,6 @@
-name: Compilar APK de Vestigio
+YAML
+
+name: Build Vestigio APK
 
 on:
   push:
@@ -10,41 +12,44 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Descargar repositorio
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Configurar Java 17
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Configurar Gradle
+      - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
 
-      - name: Aceptar licencias Android
-        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
 
-      - name: Instalar Android SDK 35
+      - name: Accept Android licenses
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses
+
+      - name: Install Android SDK 35
         run: |
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
-        run: "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Extraer proyecto
+      - name: Extract project
         run: unzip -q 'VestigioAndroid_Proyecto(1).zip' -d fuente
 
-      - name: Compilar aplicación
+      - name: Build APK
         working-directory: fuente/VestigioAndroid
         run: gradle --no-daemon assembleDebug
 
-      - name: Guardar APK
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Vestigio-APK
           path: fuente/VestigioAndroid/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 14
-          

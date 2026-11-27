@@ -31,7 +31,7 @@ jobs:
         with:
           packages: 'platforms;android-35 build-tools;35.0.0'
       - name: Extract project
-        run: unzip -q 'VestigioAndroid_Proyecto(1).zip' -d fuente
+  run: unzip -q 'VestigioAndroid_Proyecto_corregido.zip' -d fuente
 
       - name: Build APK
         working-directory: fuente/VestigioAndroid
